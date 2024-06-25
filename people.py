@@ -129,11 +129,28 @@ class Salesman(Employee):
         if position in valid_positions:
             self.position = position
         pass
-        
-    
-    # def promote 
 
-    # def increment 
+        self.superior = superior
+        
+    def promote(self, new_position: str) -> bool:
+        valid_positions = ["Rep", "Manager", "Head"]
+        
+        # Check if the new position is valid and a promotion
+        if new_position in valid_positions and valid_positions.index(new_position) > valid_positions.index(self.position):
+            # Call the increment function
+            self.increment()
+            # Update the position
+            self.position = new_position
+            # Set superior to None if promoted to "Head"
+            if new_position == "Head":
+                self.superior = None
+            return True
+        return False
+        
+
+    def increment(self) -> None :
+        increment_amt = int(0.05 * self.salary)
+        self.salary += increment_amt
 
     def find_superior(self) -> tuple[int, str]:
         # Return the employee ID and name of the superior
@@ -146,9 +163,13 @@ class Salesman(Employee):
         pass
 
 
-    def migrate_branch(self, new_code: int) -> bool:
-        # This should simply add a branch to the list; even different cities are fine
-        pass
+   def migrate_branch(self, new_code: int) -> bool:
+    # This should simply add a branch to the list; even different cities are fine
+       if new_code not in self.branches:
+           self.branches.append(new_code)
+           return True
+       return False
+
 
     
 
