@@ -37,16 +37,29 @@ class Employee:
     def change_city(self, new_city:str) -> bool:
         # Change the city 
         # Return true if city change, successful, return false if city same as old city
+        if self.city != new_city:
+            self.city = new_city
+            return True
+        return False
         pass
 
     def migrate_branch(self, new_code:int) -> bool:
         # Should work only on those employees who have a single 
         # branch to report to. Fail for others.
         # Change old branch to new if it is in the same city, else return false.
+        if len(self.branches) == 1:
+            old_branch = self.branches[0]
+            old_city = branchmap[old_branch]["city"]
+            new_city = branchmap[new_code]["city"]
+            if old_city == new_city:
+                self.branches[0] = new_code
+                return True
+        return False
         pass
 
     def increment(self, increment_amt: int) -> None:
         # Increment salary by amount specified.
+        self.salary += increment_amt
         pass
 
 
@@ -63,18 +76,32 @@ class Engineer(Employee):
         
         # Check if position is one of  "Junior", "Senior", "Team Lead", or "Director" 
         # Only then set the position. 
+        valid_positions = ["Junior", "Senior", "Team Lead", "Director"]
+        if position in valid_positions:
+            self.position = position
 
     
     def increment(self, amt:int) -> None:
         # While other functions are the same for and engineer,
         # and increment to an engineer's salary should add a 10% bonus on to "amt"
+        self.salary +=(amt+amt*0.10)
         pass
         
     def promote(self, position:str) -> bool:
-        # Return false for a demotion or an invalid promotion
         # Promotion can only be to a higher position and
         # it should call the increment function with 30% of the present salary
         # as "amt". Thereafter return True.
+        
+        valid_positions = ["Junior", "Senior", "Team Lead", "Director"]
+        if position in valid_positions and valid_positions.index(position) > valid_positions.index(self.position):
+            # Calculate 30% of the present salary
+            increment_amt = int(0.30 * self.salary)
+            # Call the increment function
+            self.increment(increment_amt)
+            # Update the position
+            self.position = position
+            return True
+        return False 
         pass
 
 
@@ -93,9 +120,16 @@ class Salesman(Employee):
     
     # An extra member variable!
     superior : int # EMPLOYEE ID of the superior this guy reports to
+    position: str
 
-    def __init__(self, ): # Complete all this! Add arguments
+    def __init__(self, name, age, ID, city, branchcodes, position="Rep", superior=None, salary=None ):
+        # Complete all this! Add arguments
+        # Check if position is one of "Rep", "Manager", "Head"
+        valid_positions = ["Rep", "Manager", "Head"]
+        if position in valid_positions:
+            self.position = position
         pass
+        
     
     # def promote 
 
