@@ -23,14 +23,28 @@ if __name__ == "__main__":  # Equivalent to int main() {} in C++.
 
             salary = input("Salary: ")
             # Create a new Engineer with given details.
-            engineer = None # Change this
+            engineer = Engineer(name, age=int(input("Age: ")), ID=ID, city=city, branchcodes=branchcodes, salary=salary)
 
             engineer_roster.append(engineer) # Add him to the list! See people.py for definiton
             
         
         elif last_input == 2:
+            name = input("Name: ")
+            ID = int(input("ID: "))  # ID should be an integer
+            city = input("City: ")
+            branchcodes = input("Branch(es): ")
+            
+            branchcodes = [int(code) for code in branchcodes.split(',')]
+            position = input("Position (leave blank for default 'Rep'): ")
+            if position.strip() == "":
+                position = "Rep"
+
+            superior = input("Superior ID (leave blank if none): ")
+            
             # Gather input to create a Salesperson
+            salesman = Salesman(name, age=int(input("Age: ")), ID=ID, city=city, branchcodes=branchcodes, position=position, superior=superior, salary=salary)
             # Then add them to the roster
+            sales_roster.append(salesman)
             pass
 
         elif last_input == 3:
@@ -68,14 +82,35 @@ if __name__ == "__main__":  # Equivalent to int main() {} in C++.
         elif last_input == 5:
             ID = int(input("Enter Employee ID to promote: "))
             # promote employee to next position
+            for employee in engineer_roster + sales_roster:
+                if employee.ID == ID:
+                    # Promote to the next position based on current position
+                    positions_engineer = ["Junior", "Senior", "Team Lead", "Director"]
+                    positions_salesman = ["Rep", "Manager", "Head"]
+                    
+                    if isinstance(employee, Engineer):
+                        current_position = employee.position
+                        new_position = positions_engineer[positions_engineer.index(current_position) + 1]
+                    elif isinstance(employee, Salesman):
+                        current_position = employee.position
+                        new_position = positions_salesman[positions_salesman.index(current_position) + 1]
 
         elif last_input == 6:
             ID = int(input("Enter Employee ID to give increment: "))
             # Increment salary of employee.
         
         elif last_input == 7:
+            
             ID = int(input("Enter Employee ID to find superior: "))
+            for employee in engineer_roster + sales_roster:
+                if employee.ID == ID:
+                    # Call the increment method
+                    if isinstance(employee, Engineer):
+                        employee.increment(int(0.30 * employee.salary))  # Engineer's increment by 30%
+                    elif isinstance(employee, Salesman):
+                        employee.increment(int(0.05 * employee.salary))  # Salesman's increment by 5%
             # Print superior of the sales employee.
+        
         
         elif last_input == 8:
             ID_E = int(input("Enter Employee ID to add superior: "))
