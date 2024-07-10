@@ -122,14 +122,16 @@ class Salesman(Employee):
     superior : int # EMPLOYEE ID of the superior this guy reports to
     position: str
 
-    def __init__(self, name, age, ID, city, branchcodes, position="Rep", superior=None, salary=None ):
+    def __init__(self, name, age, ID, city, branchcodes, position="Rep", superior=None, salary=None):
         # Complete all this! Add arguments
         # Check if position is one of "Rep", "Manager", "Head"
         valid_positions = ["Rep", "Manager", "Head"]
         if position in valid_positions:
             self.position = position
-        pass
-
+        else:
+            raise ValueError("Invalid position for Salesman")
+        
+        super().__init__(name, age, ID, city, branchcodes, salary)
         self.superior = superior
         
     def promote(self, new_position: str) -> bool:
@@ -147,29 +149,39 @@ class Salesman(Employee):
             return True
         return False
         
-
-    def increment(self) -> None :
+    def increment(self) -> None:
         increment_amt = int(0.05 * self.salary)
         self.salary += increment_amt
 
     def find_superior(self) -> tuple[int, str]:
         # Return the employee ID and name of the superior
         # Report a tuple of None, None if no superior.
-        pass
+        if self.superior is None:
+            return (None, None)
+        for employee in sales_roster + engineer_roster:
+            if employee.ID == self.superior:
+                return (employee.ID, employee.name)
+        return (None, None)
 
-    def add_superior(self) -> bool:
+    def add_superior(self, superior_id: int) -> bool:
         # Add superior of immediately higher rank.
         # If superior doesn't exist return false,
-        pass
+        valid_positions = ["Rep", "Manager", "Head"]
+        if self.position == "Head":
+            return False
+        
+        for employee in sales_roster + engineer_roster:
+            if employee.ID == superior_id and valid_positions.index(employee.position) > valid_positions.index(self.position):
+                self.superior = superior_id
+                return True
+        return False
 
-
-   def migrate_branch(self, new_code: int) -> bool:
-    # This should simply add a branch to the list; even different cities are fine
-       if new_code not in self.branches:
-           self.branches.append(new_code)
-           return True
-       return False
-
+    def migrate_branch(self, new_code: int) -> bool:
+        # This should simply add a branch to the list; even different cities are fine
+        if new_code not in self.branches:
+            self.branches.append(new_code)
+            return True
+        return False
 
     
 
